@@ -1,10 +1,11 @@
 name: Build and Push
 
 on:
-  push:
-    branches: [main, test]
-    # Publish semver tags as releases.
-    tags: ["v*.*.*", "v*.*.*.*"]
+  workflow_dispatch: # remove and uncomment to re-enable
+  # push:
+  #   branches: [main, test]
+  #   # Publish semver tags as releases.
+  #   tags: ["v*.*.*", "v*.*.*.*"]
 
 jobs:
   build:
