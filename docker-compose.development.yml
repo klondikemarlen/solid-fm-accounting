@@ -1,0 +1,178 @@
+x-default-environment: &default-environment
+  TZ: "UTC"
+  NODE_ENV: development
+  DB_HOST: db
+  DB_USERNAME: &default-db-username postgres
+  DB_DATABASE: &default-db-name solid_fm_accouting_development
+  DB_PASSWORD: &default-db-password DevPwd99!
+  DB_PORT: &default-db-port 5432
+  DB_HEALTH_CHECK_INTERVAL_SECONDS: 5
+  DB_HEALTH_CHECK_TIMEOUT_SECONDS: 10
+  DB_HEALTH_CHECK_RETRIES: 3
+  DB_HEALTH_CHECK_START_PERIOD_SECONDS: 5
+  FRONTEND_URL: "http://localhost:8080"
+  VITE_APPLICATION_NAME: "Solid FM Accounting"
+  VITE_API_BASE_URL: "http://localhost:3000"
+  VITE_AUTH0_DOMAIN: "https://solid-fm-accounting.ca.auth0.com"
+  VITE_AUTH0_CLIENT_ID: "MqabsjbfmlxoyayWFrlvsRmW6sHBLfNr"
+  RELEASE_TAG: "${RELEASE_TAG:-development}"
+  GIT_COMMIT_HASH: "${GIT_COMMIT_HASH:-not-set}"
+  MAIL_HOST: "mail"
+  MAIL_PORT: 1025
+  MAIL_FROM: "system-user@solid-fm-accounting.ca"
+  MAIL_SERVICE: "MailDev"
+
+x-shared-watch:
+  - &gitignore-sync
+    path: ./.gitignore
+    target: /usr/src/.gitignore
+    action: sync
+  - &prettierrc-sync
+    path: ./.prettierrc.yaml
+    target: /usr/src/.prettierrc.yaml
+    action: sync
+  - &docker-compose-rebuild
+    path: ./docker-compose.development.yml
+    action: rebuild
+
+services:
+  # api:
+  #   build:
+  #     context: ./api
+  #     dockerfile: development.Dockerfile
+  #   env_file:
+  #     - ./api/.env.development
+  #   environment:
+  #     <<: *default-environment
+  #   tty: true # allows attaching debugger, equivalent of docker exec -t
+  #   # stdin_open: true # equivalent of docker exec -i
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #     - mail
+  #   develop:
+  #     watch:
+  #       - *gitignore-sync
+  #       - *prettierrc-sync
+  #       - *docker-compose-rebuild
+  #       - path: ./api/package.json
+  #         target: /usr/src/api/package.json
+  #         action: sync+restart
+  #       - path: ./api/package-lock.json
+  #         action: rebuild
+  #       - path: ./api
+  #         target: /usr/src/api
+  #         action: sync
+  #         ignore:
+  #           - node_modules/
+  #           - src/initializers
+  #       - path: ./api/src/initializers
+  #         target: /usr/src/api/src/initializers
+  #         action: sync+restart
+
+  web:
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
+    environment:
+      <<: *default-environment
+    ports:
+      - "8080:8080"
+    # depends_on:
+    #   - api
+    develop:
+      watch:
+        - *gitignore-sync
+        - *prettierrc-sync
+        - *docker-compose-rebuild
+
+        - action: sync+restart
+          path: ./web/package.json
+          target: /usr/src/web/package.json
+
+        - action: rebuild
+          path: ./web/package-lock.json
+          target: /usr/src/web/package-lock.json
+
+        - action: sync+restart
+          path: ./web
+          target: /usr/src/web
+          ignore:
+            - node_modules/
+    volumes:
+      - web-node_modules:/usr/src/web/node_modules
+
+  # test_api:
+  #   build:
+  #     context: ./api
+  #     dockerfile: development.Dockerfile
+  #   command: /bin/true
+  #   env_file:
+  #     - ./api/.env.development
+  #   environment:
+  #     <<: *default-environment
+  #     NODE_ENV: test
+  #     DB_DATABASE: solid_fm_accouting_test
+  #     DEFAULT_LOG_LEVEL: "info"
+  #     DB_HEALTH_CHECK_START_PERIOD_SECONDS: 0
+  #   tty: true
+  #   volumes:
+  #     - ./api:/usr/src/api
+  #   depends_on:
+  #     - db
+  #     - mail
+  #   develop:
+  #     watch:
+  #       - *gitignore-sync
+  #       - *prettierrc-sync
+  #       - *docker-compose-rebuild
+  #       - path: ./api/package-lock.json
+  #         action: rebuild
+
+  # test_web:
+  #   build:
+  #     context: ./web
+  #     dockerfile: development.Dockerfile
+  #   command: /bin/true
+  #   environment:
+  #     <<: *default-environment
+  #     NODE_ENV: test
+  #   tty: true
+  #   volumes:
+  #     - ./web:/usr/src/web
+
+  db:
+    image: postgres:18.0
+    user: root
+    environment:
+      <<: *default-environment
+      POSTGRES_USER: *default-db-username
+      POSTGRES_PASSWORD: *default-db-password
+      POSTGRES_DB: *default-db-name
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  mail:
+    image: maildev/maildev:2.2.1
+    ports:
+      - "1080:1080" # Web UI
+      - "1025:1025" # SMTP
+
+  # For easily generating large PlantUML diagrams
+  # Not relevant to production environment.
+  # Accessible at http://localhost:9999
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    ports:
+      - 9999:8080
+    environment:
+      PLANTUML_LIMIT_SIZE: 8192
+    profiles:
+      - design
+
+volumes:
+  web-node_modules:
+  db-data:

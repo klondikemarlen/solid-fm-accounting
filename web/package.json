@@ -1,0 +1,45 @@
+{
+  "name": "solid-fm-accounting-web",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint . --ext .js,.ts,.vue --ignore-path ../.gitignore",
+    "check-types": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@auth0/auth0-vue": "^2.4.0",
+    "@vueuse/router": "^13.9.0",
+    "axios": "^1.12.2",
+    "lodash": "^4.17.21",
+    "luxon": "^3.7.2",
+    "modern-normalize": "^3.0.1",
+    "qs": "^6.14.0",
+    "vue": "^3.5.12",
+    "vue-i18n": "^10.0.8",
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.10.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.20",
+    "@types/luxon": "^3.7.1",
+    "@types/qs": "^6.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vue": "^9.33.0",
+    "prettier": "^3.6.2",
+    "sass": "^1.93.2",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.20",
+    "vite-plugin-vuetify": "^2.1.2",
+    "vue-tsc": "^2.2.12"
+  }
+}
