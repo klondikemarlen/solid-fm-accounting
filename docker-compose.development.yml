@@ -36,40 +36,47 @@ x-shared-watch:
     action: rebuild
 
 services:
-  # api:
-  #   build:
-  #     context: ./api
-  #     dockerfile: development.Dockerfile
-  #   env_file:
-  #     - ./api/.env.development
-  #   environment:
-  #     <<: *default-environment
-  #   tty: true # allows attaching debugger, equivalent of docker exec -t
-  #   # stdin_open: true # equivalent of docker exec -i
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - db
-  #     - mail
-  #   develop:
-  #     watch:
-  #       - *gitignore-sync
-  #       - *prettierrc-sync
-  #       - *docker-compose-rebuild
-  #       - path: ./api/package.json
-  #         target: /usr/src/api/package.json
-  #         action: sync+restart
-  #       - path: ./api/package-lock.json
-  #         action: rebuild
-  #       - path: ./api
-  #         target: /usr/src/api
-  #         action: sync
-  #         ignore:
-  #           - node_modules/
-  #           - src/initializers
-  #       - path: ./api/src/initializers
-  #         target: /usr/src/api/src/initializers
-  #         action: sync+restart
+  api:
+    build:
+      context: ./api
+      dockerfile: development.Dockerfile
+    # env_file:
+    #   - ./api/.env.development
+    environment:
+      <<: *default-environment
+    tty: true # allows attaching debugger, equivalent of docker exec -t
+    # stdin_open: true # equivalent of docker exec -i
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - mail
+    develop:
+      watch:
+        - *gitignore-sync
+        - *prettierrc-sync
+        - *docker-compose-rebuild
+
+        - action: sync+restart
+          path: ./api/Gemfile
+          target: /usr/src/api/Gemfile
+
+        - action: rebuild
+          path: ./api/Gemfile.lock
+          target: /usr/src/api/Gemfile.lock
+
+        - action: sync+restart
+          path: ./api
+          target: /usr/src/api
+          ignore:
+            - vendor/bundle/
+            - .bundle/
+            - tmp/
+            - log/
+            - storage/
+            - node_modules/
+    volumes:
+      - api-bundle:/usr/local/bundle
 
   web:
     build:
@@ -174,5 +181,6 @@ services:
       - design
 
 volumes:
+  api-bundle:
   web-node_modules:
   db-data:
