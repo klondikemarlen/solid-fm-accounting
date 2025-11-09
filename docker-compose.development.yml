@@ -14,6 +14,7 @@ x-default-environment: &default-environment
   VITE_APPLICATION_NAME: "Solid FM Accounting"
   VITE_API_BASE_URL: "http://localhost:3000"
   VITE_AUTH0_DOMAIN: "https://solid-fm-accounting.ca.auth0.com"
+  VITE_AUTH0_AUDIENCE: "http://localhost:3000/api"
   VITE_AUTH0_CLIENT_ID: "MqabsjbfmlxoyayWFrlvsRmW6sHBLfNr"
   RELEASE_TAG: "${RELEASE_TAG:-development}"
   GIT_COMMIT_HASH: "${GIT_COMMIT_HASH:-not-set}"
