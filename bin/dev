@@ -138,27 +138,16 @@ class DevHelper
     run(*%w[test_web npm run test], *args, **kwargs)
   end
 
-  def knex(*args, **kwargs)
-    case args[0]
-    when "migrate:make"
-      knex_command = compose_command(*%w[exec api npm run knex], *args, **kwargs)
-      copy_command = compose_command("cp api:/usr/src/api/src/db/migrations/. ./api/src/db/migrations")
-      command = "#{knex_command} && #{copy_command}"
-      puts "Running: #{command}"
-      exec(command)
-    else
-      compose(*%w[exec api npm run knex], *args, **kwargs)
-    end
+  def migrate(*args, **kwargs)
+    rails("db:migrate", *args, **kwargs)
   end
 
-  def migrate(*args, **kwargs)
-    action = args[0]
-    knex("migrate:#{action}", *args.drop(1), **kwargs)
+  def rollback(*args, **kwargs)
+    rails("db:rollback", *args, **kwargs)
   end
 
   def seed(*args, **kwargs)
-    action = args[0]
-    knex("seed:#{action}", *args.drop(1), **kwargs)
+    rails("db:seed", *args, **kwargs)
   end
 
   ##
