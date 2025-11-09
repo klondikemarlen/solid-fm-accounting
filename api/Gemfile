@@ -18,6 +18,7 @@ gem "thruster", "0.1.16", require: false # Add HTTP asset caching/compression an
 gem "tzinfo-data", "2.0.6", platforms: %i[ windows jruby ] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 
 group :development, :test do
+  gem "annotaterb", "4.20.0" # Annotates Rails/ActiveRecord Models, routes, fixtures, and others based on the database schema.
   gem "brakeman", "7.1.0", require: false # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "debug", "1.11.0", platforms: %i[ mri windows ], require: "debug/prelude" # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rubocop-rails-omakase", "1.1.0", require: false # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]

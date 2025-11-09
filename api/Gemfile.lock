@@ -75,6 +75,9 @@ GEM
     acts_as_paranoid (0.11.0)
       activerecord (>= 6.1, < 8.2)
       activesupport (>= 6.1, < 8.2)
+    annotaterb (4.20.0)
+      activerecord (>= 6.0.0)
+      activesupport (>= 6.0.0)
     ast (2.4.3)
     base64 (0.3.0)
     bcrypt_pbkdf (1.1.1)
@@ -297,6 +300,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid (= 0.11.0)
+  annotaterb (= 4.20.0)
   bootsnap (= 1.18.6)
   brakeman (= 7.1.0)
   debug (= 1.11.0)
