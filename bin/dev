@@ -102,9 +102,7 @@ class DevHelper
   end
 
   def bundle(*args, **kwargs)
-    command = bash_command("cd api && bundle", *args, **kwargs)
-    puts "Running: #{command}"
-    exec(command)
+    run(*%w[api bundle], *args, **kwargs)
   end
 
   def npm(*args, **kwargs)
@@ -322,10 +320,6 @@ class DevHelper
   def compose_command(*args, **kwargs)
     environment = kwargs.fetch(:environment, "development")
     "cd #{project_root} && docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
-  end
-
-  def bash_command(*args, **kwargs)
-    "cd #{project_root} && #{args.join(" ")}"
   end
 
   def project_root
