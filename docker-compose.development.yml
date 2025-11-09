@@ -23,14 +23,6 @@ x-default-environment: &default-environment
   MAIL_SERVICE: "MailDev"
 
 x-shared-watch:
-  - &gitignore-sync
-    path: ./.gitignore
-    target: /usr/src/.gitignore
-    action: sync
-  - &prettierrc-sync
-    path: ./.prettierrc.yaml
-    target: /usr/src/.prettierrc.yaml
-    action: sync
   - &docker-compose-rebuild
     path: ./docker-compose.development.yml
     action: rebuild
@@ -51,32 +43,18 @@ services:
     depends_on:
       - db
       - mail
+    volumes:
+      - ./api:/usr/src/api
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+      - api-bundle:/usr/local/bundle
     develop:
       watch:
-        - *gitignore-sync
-        - *prettierrc-sync
         - *docker-compose-rebuild
-
-        - action: sync+restart
-          path: ./api/Gemfile
-          target: /usr/src/api/Gemfile
 
         - action: rebuild
           path: ./api/Gemfile.lock
           target: /usr/src/api/Gemfile.lock
-
-        - action: sync+restart
-          path: ./api
-          target: /usr/src/api
-          ignore:
-            - vendor/bundle/
-            - .bundle/
-            - tmp/
-            - log/
-            - storage/
-            - node_modules/
-    volumes:
-      - api-bundle:/usr/local/bundle
 
   web:
     build:
@@ -86,29 +64,20 @@ services:
       <<: *default-environment
     ports:
       - "8080:8080"
-    # depends_on:
-    #   - api
+    depends_on:
+      - api
+    volumes:
+      - ./web:/usr/src/web
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+      - web-node_modules:/usr/src/web/node_modules
     develop:
       watch:
-        - *gitignore-sync
-        - *prettierrc-sync
         - *docker-compose-rebuild
-
-        - action: sync+restart
-          path: ./web/package.json
-          target: /usr/src/web/package.json
 
         - action: rebuild
           path: ./web/package-lock.json
           target: /usr/src/web/package-lock.json
-
-        - action: sync+restart
-          path: ./web
-          target: /usr/src/web
-          ignore:
-            - node_modules/
-    volumes:
-      - web-node_modules:/usr/src/web/node_modules
 
   # test_api:
   #   build:
