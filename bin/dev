@@ -93,8 +93,12 @@ class DevHelper
     run(*%w[api], *args, **kwargs)
   end
 
+  def rails(*args, **kwargs)
+    run(*%w[api rails], *args, **kwargs)
+  end
+
   def console(*args, **kwargs)
-    run(*%w[api rails console --sandbox], *args, **kwargs)
+    rails(*%w[console --sandbox], *args, **kwargs)
   end
 
   def npm(*args, **kwargs)
