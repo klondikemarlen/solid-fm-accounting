@@ -151,14 +151,14 @@ class DevHelper
   end
 
   ##
-  # Start the sqlcmd utility to interact with the database.
-  # -I enable quoted identifiers, e.g. "table"."column"
-  def sqlcmd(*args, **kwargs) # rubocop:disable Metrics/MethodLength
+  # Start the psql utility to interact with the database.
+  def psql(*args, **kwargs)
     environment_hoist = ENV.slice(*%w[
-      DB_DATABASE
-      DB_USERNAME
-      DB_HOST
-      DB_PORT
+      POSTGRES_USER
+      POSTGRES_PASSWORD
+      POSTGRES_HOST
+      POSTGRES_PORT
+      POSTGRES_DB
     ]).map { |key, value|
       "export #{key}=\"#{value}\""
     }.join("\n  ")
@@ -167,14 +167,13 @@ class DevHelper
       <<~BASH,
         exec db sh -c '
           #{environment_hoist}
-          /opt/mssql-tools18/bin/sqlcmd \
-            -U "$DB_USERNAME" \
-            -P "$DB_PASSWORD" \
-            -H "$DB_HOST" \
-            -d "$DB_DATABASE" \
-            -C \
-            -I #{args.join(" ")}
-          '
+          PGPASSWORD="$POSTGRES_PASSWORD" psql \
+            -U "$POSTGRES_USER" \
+            -h "$POSTGRES_HOST" \
+            -p "$POSTGRES_PORT" \
+            -d "$POSTGRES_DB" \
+            #{args.join(" ")}
+        '
       BASH
       **kwargs
     )
