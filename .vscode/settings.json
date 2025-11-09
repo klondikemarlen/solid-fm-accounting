@@ -1,5 +1,7 @@
 {
   "eslint.workingDirectories": ["./api", "./web"],
   "eslint.validate": ["javascript", "typescript", "vue"],
+  "rubyLsp.bundleGemfile": "${workspaceFolder}/api/Gemfile",
+  "rubyLsp.rubyExecutablePath": "${workspaceFolder}/api/.ruby-version",
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }
