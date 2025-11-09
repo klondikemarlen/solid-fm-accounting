@@ -5,7 +5,7 @@ require "open3"
 # Supports fetching and editing PR descriptions from a full GitHub PR URL using SSH and GitHub CLI.
 #
 # Example usage:
-#   - PullRequestEditor.edit_pull_request_description('https://github.com/icefoganalytics/travel-authorization/pull/218')
+#   - PullRequestEditor.edit_pull_request_description('https://github.com/klondikemarlen/solid-fm-accounting/pull/218')
 class PullRequestEditor
   EDITOR = ENV.fetch("EDITOR", "windsurf")
 

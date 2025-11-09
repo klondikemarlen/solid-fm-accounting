@@ -187,7 +187,7 @@ class DevHelper
   #   dev branch-from https://yg-hpw.atlassian.net/browse/ELCC-61
   #   #=> git checkout -b elcc-61/add-wage-enhancement-replication-across-months
   #
-  #   dev branch-from https://github.com/icefoganalytics/internal-data-portal/issues/98
+  #   dev branch-from https://github.com/klondikemarlen/solid-fm-accounting/issues/98
   #   #=> git checkout -b issue-98/switch-test-suite-from-jest-to-vitest
   #
   def branch_from(jira_or_github_issue_url, *args, **kwargs)
@@ -221,7 +221,7 @@ class DevHelper
   ##
   # Edits the description of a pull request.
   # Example:
-  #   dev edit-pr https://github.com/icefoganalytics/travel-authorization/pull/218
+  #   dev edit-pr https://github.com/klondikemarlen/solid-fm-accounting/pull/218
   def edit_pr(pull_request_url, *args, **kwargs)
     PullRequestEditor.edit_pull_request_description(pull_request_url, *args, **kwargs)
     exit(0)
