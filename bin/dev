@@ -101,6 +101,10 @@ class DevHelper
     rails(*%w[console --sandbox], *args, **kwargs)
   end
 
+  def bundle(*args, **kwargs)
+    run(*%w[api bundle], *args, **kwargs)
+  end
+
   def npm(*args, **kwargs)
     run(*%w[web npm], *args, **kwargs)
   end
