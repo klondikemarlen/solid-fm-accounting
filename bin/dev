@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "shellwords"
 require "rdoc"
 
 require_relative "./github_api"
@@ -9,12 +10,13 @@ require_relative "./pull_request_editor"
 class DevHelper
   # Support dashes in command names
   COMMAND_TO_METHOD = {
-    "ts-node" => :ts_node,
-    "check-types" => :check_types,
     "branch-from" => :branch_from,
     "changes-from" => :changes_from,
+    "check-types" => :check_types,
     "description-from" => :description_from,
     "edit-pr" => :edit_pr,
+    "psql-query" => :psql_query,
+    "ts-node" => :ts_node,
   }
   METHOD_TO_COMMAND = COMMAND_TO_METHOD.invert
 
@@ -153,7 +155,7 @@ class DevHelper
   ##
   # Start the psql utility to interact with the database.
   def psql(*args, **kwargs)
-    environment_hoist = ENV.slice(*%w[
+    environment_variable_export_commands = ENV.slice(*%w[
       POSTGRES_USER
       POSTGRES_PASSWORD
       POSTGRES_HOST
@@ -163,10 +165,13 @@ class DevHelper
       "export #{key}=\"#{value}\""
     }.join("\n  ")
 
+    tty_argument = ""
+    tty_argument = "-T" if kwargs.fetch(:enable_tty, false)
+
     compose(
       <<~BASH,
-        exec db sh -c '
-          #{environment_hoist}
+        exec #{tty_argument} db sh -c '
+          #{environment_variable_export_commands}
           PGPASSWORD="$POSTGRES_PASSWORD" psql \
             -U "$POSTGRES_USER" \
             -h "$POSTGRES_HOST" \
@@ -177,6 +182,14 @@ class DevHelper
       BASH
       **kwargs
     )
+  end
+
+  def psql_query(query, *args, **kwargs)
+    if query.nil? || query.strip.empty?
+      raise ArgumentError, "Query cannot be nil or empty"
+    end
+
+    psql(args, enable_tty: true, pipe_input: query, **kwargs)
   end
 
   def db(*args, **kwargs)
@@ -306,12 +319,38 @@ class DevHelper
   end
 
   def compose_command(*args, **kwargs)
-    environment = kwargs.fetch(:environment, "development")
-    "cd #{project_root} && docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
+    environment = kwargs.delete(:environment) { "development" }
+    pipe_input = kwargs.delete(:pipe_input)
+
+    go_to_project_root = "cd #{project_root}"
+    bootstrap_docker = "docker compose -f docker-compose.#{environment}.yml #{args.join(' ')}"
+
+    if pipe_input
+      shell_safe_pipe_input = Shellwords.escape(pipe_input)
+      pipe_input_to_compose = "printf '%s\\n' #{shell_safe_pipe_input} |"
+
+      <<~BASH
+        #{go_to_project_root} && \
+        #{pipe_input_to_compose} #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    else
+      <<~BASH
+        #{go_to_project_root} && \
+        #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    end
   end
 
   def project_root
     @project_root ||= File.absolute_path("#{__dir__}/..")
+  end
+
+  def dynamic_environment_variables
+    if RUBY_PLATFORM =~ /linux/
+      %(HOST_USER_ID="#{user_id}" HOST_GROUP_ID="#{group_id}")
+    else
+      ""
+    end
   end
 
   def take_over_needed?(file_or_directory)

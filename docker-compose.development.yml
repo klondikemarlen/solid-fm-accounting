@@ -39,6 +39,7 @@ services:
       <<: *default-environment
     tty: true # allows attaching debugger, equivalent of docker exec -t
     # stdin_open: true # equivalent of docker exec -i
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "3000:3000"
     depends_on:
@@ -63,6 +64,7 @@ services:
       dockerfile: development.Dockerfile
     environment:
       <<: *default-environment
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "8080:8080"
     depends_on:
