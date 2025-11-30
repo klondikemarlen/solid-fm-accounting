@@ -2,6 +2,18 @@ FROM ruby:3.4.7
 
 RUN gem update --system 3.7.2 && gem install bundler -v 2.7.2
 
+# TODO: add this once it is needed?
+# Install build dependencies for gems with native extensions
+# RUN apt-get update -qq && \
+#     apt-get install --no-install-recommends -y \
+#     build-essential \
+#     git \
+#     libpq-dev \
+#     libyaml-dev \
+#     pkg-config \
+#     postgresql-client && \
+#     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 WORKDIR /usr/src/api
 
 COPY Gemfile Gemfile.lock ./
