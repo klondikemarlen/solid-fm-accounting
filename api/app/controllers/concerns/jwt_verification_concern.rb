@@ -23,12 +23,13 @@ module JwtVerificationConcern
   end
 
   def authorization_token
-    @authorization_token ||= begin
-      authorization_header = request.headers["Authorization"]
+    @authorization_token ||=
+      begin
+        authorization_header = request.headers["Authorization"]
 
-      return nil unless authorization_header.present?
-      authorization_header.split(" ").last
-    end
+        return nil unless authorization_header.present?
+        authorization_header.split(" ").last
+      end
   end
 
   def decode_auth0_authorization_token(token)
@@ -46,28 +47,31 @@ module JwtVerificationConcern
         verify_iss: true,
         aud: Rails.application.config.auth0.audience,
         verify_aud: true,
-        jwks: auth0_public_jwks
-      }
+        jwks: auth0_public_jwks,
+      },
     ).first
   end
 
   def auth0_public_jwks
-    @auth0_public_jwks ||= begin
-      Rails.cache.fetch(JWKS_CACHE_KEY, expires_in: JWKS_CACHE_TTL) do
-        jwks_uri = URI("#{Rails.application.config.auth0.domain}/.well-known/jwks.json")
-        response = Net::HTTP.get_response(jwks_uri)
+    @auth0_public_jwks ||=
+      begin
+        Rails
+          .cache
+          .fetch(JWKS_CACHE_KEY, expires_in: JWKS_CACHE_TTL) do
+            jwks_uri = URI("#{Rails.application.config.auth0.domain}/.well-known/jwks.json")
+            response = Net::HTTP.get_response(jwks_uri)
 
-        unless response.is_a?(Net::HTTPSuccess)
-          raise "Failed to fetch JWKS from Auth0: HTTP #{response.code}"
-        end
+            unless response.is_a?(Net::HTTPSuccess)
+              raise "Failed to fetch JWKS from Auth0: HTTP #{response.code}"
+            end
 
-        parsed_response = JSON.parse(response.body)
-        JWT::JWK::Set.new(parsed_response)
+            parsed_response = JSON.parse(response.body)
+            JWT::JWK::Set.new(parsed_response)
+          end
+      rescue StandardError => error
+        Rails.logger.error("Failed to fetch JWKS from Auth0: #{error}")
+
+        nil
       end
-    rescue StandardError => error
-      Rails.logger.error("Failed to fetch JWKS from Auth0: #{error}")
-
-      nil
-    end
   end
 end

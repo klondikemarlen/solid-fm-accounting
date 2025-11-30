@@ -67,9 +67,7 @@ module Auth0AuthenticationConcern
 
   include JwtVerificationConcern
 
-  included do
-    attr_reader :current_user
-  end
+  included { attr_reader :current_user }
 
   private
 
@@ -94,38 +92,31 @@ module Auth0AuthenticationConcern
   end
 
   def find_or_create_user_from_token(decoded_token)
-    puts "decoded_token: #{decoded_token}"
-    # Token format is not what I would expect? Maybe I'm sending the wrong type of data?
-    # Or I'm not retrieving the correct data from Auth0?
-    # {"iss" => "https://solid-fm-accounting.ca.auth0.com/", "sub" => "tV9Mf8FNHtUrWZhhtbWv7PaN9nnkg68f@clients", "aud" => "http://localhost:3000/api", "iat" => 1762726657, "exp" => 1762813057, "gty" => "client-credentials", "azp" => "tV9Mf8FNHtUrWZhhtbWv7PaN9nnkg68f"}
-    # I think after I decode the token I need to retrieve the user data from Auth0 like how api/src/integrations/auth0-integration.ts does it in WRAP
-    user_info = Integrations::Auth0Integration.get_user_info(decoded_token)
     auth0_subject = decoded_token["sub"]
     user = User.find_by(auth0_subject: auth0_subject)
     return user if user
 
-    # need to retrieve user from auth0 before I can get email and name
-    create_user_from_token(auth0_subject, email, name)
+    authorization_header = request.headers["Authorization"]
+    user_info = Integrations::Auth0Integration.get_user_info(authorization_header)
+
+    create_user_from_token(auth0_subject, user_info.email)
   end
 
-  def create_user_from_token(auth0_subject, email, name)
-    name_parts = name&.split(" ") || []
-    first_name = name_parts.first || email&.split("@")&.first || "Unknown"
-    last_name = name_parts[1..]&.join(" ")&.presence
+  def create_user_from_token(auth0_subject, email)
+    name = email.split("@").first
+    first_name, last_name = name.split(/[.+]/)
+    first_name ||= "UNKNOWN"
+    last_name ||= "UNKNOWN"
 
     User.create!(
       auth0_subject: auth0_subject,
       email: email,
       first_name: first_name,
       last_name: last_name,
-      display_name: name || email || "Unknown User"
+      display_name: name || email || "UNKNOWN USER",
     )
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Failed to create user: #{e.message}")
-    unauthorizednil
-  end
-
-  def unauthorized
     render json: { error: "Unauthorized" }, status: :unauthorized
   end
 end
