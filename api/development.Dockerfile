@@ -8,6 +8,9 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
+# Make bundle directory writable for all users (needed when running as non-root)
+RUN chmod -R a+w /usr/local/bundle
+
 COPY . .
 
 RUN chmod +x ./bin/rails
