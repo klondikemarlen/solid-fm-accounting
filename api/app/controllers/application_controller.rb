@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::API
-  include Auth0Authentication
+  include Auth0AuthenticationConcern
 end

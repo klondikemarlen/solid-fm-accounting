@@ -5,7 +5,7 @@ require "jwt"
 require "net/http"
 require "uri"
 
-module JwtVerification
+module JwtVerificationConcern
   extend ActiveSupport::Concern
 
   JWKS_CACHE_KEY = "auth0_public_jwks"
