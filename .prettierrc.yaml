@@ -9,8 +9,6 @@ singleAttributePerLine: true
 useTabs: false
 printWidth: 100
 plugins:
-  - prettier-plugin-embed
   - prettier-plugin-sql
-  - "@prettier/plugin-ruby"
 language: "postgresql"
 paramTypes: "{ named: [':'] }"
