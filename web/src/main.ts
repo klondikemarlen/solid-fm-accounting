@@ -1,9 +1,4 @@
 import { createApp } from "vue"
-import "uno:theme.css"
-import "uno:preflights.css"
-import "@/styles/main.css"
-import "uno:shortcuts.css"
-import "uno:utilities.css"
 
 // Plugins
 import vuetifyPlugin from "@/plugins/vuetify-plugin"

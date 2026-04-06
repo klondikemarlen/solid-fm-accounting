@@ -4,9 +4,10 @@ export default defineConfig({
   presets: [presetWind4()],
   outputToCssLayers: {
     cssLayerName: layer => {
-      if (layer === "default") return "utilities"
-      if (layer === "preflights") return "base"
-      if (layer === "shortcuts") return "components"
+      if (layer === "default") return "uno-default"
+      if (layer === "preflights") return "uno-base"
+      if (layer === "shortcuts") return "uno-shortcuts"
+      if (layer === "theme") return "uno-theme"
 
       return layer
     },
