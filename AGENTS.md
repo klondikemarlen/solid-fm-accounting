@@ -43,6 +43,8 @@ creation or issue cleanup, agents should also use the GitHub issue workflow.
 ## Dev Environment Tips
 
 - Prefer `./bin/dev`, not bare `dev`, so commands work reliably from the repo root
+- **Never run bare `npm`, `npx`, or `cd web && ...` commands** — all services run in Docker, so use
+  `./bin/dev` to execute commands inside the correct container
 - Start all services: `./bin/dev up`
 - Start API only: `./bin/dev up api`
 - Start web only: `./bin/dev up web`
@@ -50,6 +52,8 @@ creation or issue cleanup, agents should also use the GitHub issue workflow.
 - Stop services: `./bin/dev down`
 - Remove a specific service volume when needed by passing extra Docker Compose args through
   `./bin/dev down`, for example `./bin/dev down api -v`
+- Run arbitrary commands in a service: `./bin/dev <service> <command>`, e.g.
+  `./bin/dev web npm run check-types`
 - Access an API shell: `./bin/dev exec api bash`
 - Run Rails commands: `./bin/dev rails <command>`
 - Access PostgreSQL: `./bin/dev psql`
