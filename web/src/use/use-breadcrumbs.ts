@@ -16,15 +16,6 @@ export const BASE_CRUMB = {
     name: "DashboardPage",
   },
 }
-export const ADMIN_CRUMB = {
-  title: "Administration Dashboard",
-  disabled: false,
-  to: {
-    name: "administration/DashboardPage",
-  },
-  exact: true,
-}
-
 // Global state for breadcrumbs
 const state = reactive<{
   breadcrumbs: Breadcrumb[]

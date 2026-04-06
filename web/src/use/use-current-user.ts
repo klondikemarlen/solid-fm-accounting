@@ -1,5 +1,5 @@
 import { computed, reactive, toRefs, unref } from "vue"
-import { isEmpty, isNil, isUndefined } from "lodash"
+import { isNil } from "lodash"
 import { DateTime } from "luxon"
 
 import currentUserApi from "@/api/current-user-api"
@@ -35,11 +35,7 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
   const isSystemAdmin = computed(() => {
     return state.currentUser?.roles.includes(UserRoles.SYSTEM_ADMIN)
   })
-  const isGroupAdmin = computed(() => !isEmpty(state.currentUser?.adminGroups))
-  const isCreatorGroupAdmin = computed(() => {
-    return state.currentUser?.adminGroups?.some((group) => !group.isHost)
-  })
-  const isAdmin = computed(() => isSystemAdmin.value || isGroupAdmin.value)
+  const isAdmin = computed(() => isSystemAdmin.value)
 
   async function fetch(): Promise<User> {
     state.isLoading = true
@@ -91,37 +87,6 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     state.isCached = false
   }
 
-  // Helper functions
-  function isGroupAdminFor(groupId: number) {
-    if (isNil(state.currentUser)) {
-      throw new Error("Expected currentUser to be non-null")
-    }
-
-    const { adminGroups } = state.currentUser
-    if (isUndefined(adminGroups)) {
-      throw new Error("Expected currentUser to have a adminGroups association")
-    }
-
-    return adminGroups.some((group) => group.id === groupId)
-  }
-
-  function isAdminForInformationSharingAgreement(informationSharingAgreementId: number) {
-    if (isNil(state.currentUser)) {
-      throw new Error("Expected currentUser to be non-null")
-    }
-
-    const { adminInformationSharingAgreementAccessGrants } = state.currentUser
-    if (isUndefined(adminInformationSharingAgreementAccessGrants)) {
-      throw new Error(
-        "Expected currentUser to have a adminInformationSharingAgreementAccessGrants association"
-      )
-    }
-
-    return adminInformationSharingAgreementAccessGrants.some(
-      (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
-    )
-  }
-
   return {
     ...toRefs(state as StateOrLoadedState),
     isReady,
@@ -131,12 +96,7 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     save,
     // Computed properties
     isAdmin,
-    isCreatorGroupAdmin,
-    isGroupAdmin,
     isSystemAdmin,
-    // Helper functions
-    isGroupAdminFor,
-    isAdminForInformationSharingAgreement,
   }
 }
 

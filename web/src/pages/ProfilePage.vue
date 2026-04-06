@@ -1,26 +1,15 @@
 <template>
   <v-skeleton-loader v-if="isNil(currentUser)" />
   <v-container v-else>
-    <div class="d-flex flex-column flex-md-row justify-space-between mb-3">
-      <v-spacer />
-      <div class="d-flex justify-space-between mt-4 mb-3 my-md-0">
-        <v-btn
-          color="primary"
-          variant="outlined"
-          :to="{ name: 'users/UsersPage' }"
-        >
-          Back
-        </v-btn>
-        <v-btn
-          class="ml-md-3"
-          title="Refresh"
-          color="primary"
-          append-icon="mdi-sync"
-          @click="refresh"
-        >
-          Sync
-        </v-btn>
-      </div>
+    <div class="d-flex justify-end mb-3">
+      <v-btn
+        title="Refresh"
+        color="primary"
+        append-icon="mdi-sync"
+        @click="refresh"
+      >
+        Sync
+      </v-btn>
     </div>
 
     TODO

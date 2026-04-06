@@ -1,7 +1,7 @@
 <template>
   <h3 class="text-h3 mb-4">Notifications</h3>
 
-  <AppCard>
+  <v-card>
     <v-btn-toggle
       v-model="showFilter"
       color="info"
@@ -22,7 +22,7 @@
     </v-btn-toggle>
 
     TODO
-  </AppCard>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

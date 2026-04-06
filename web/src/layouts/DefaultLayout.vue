@@ -30,31 +30,7 @@
       >
     </v-app-bar-title>
 
-    <div
-      :style="{ width: `${searchWidth}px` }"
-      class="d-none"
-    >
-      <v-text-field
-        v-model="searchValue"
-        variant="outlined"
-        label="Search"
-        hide-details
-        density="compact"
-        class="ml-2"
-        bg-color="#545454"
-        @update:focused="updateSearchFocus"
-      ></v-text-field>
-    </div>
     <v-spacer />
-
-    <v-btn
-      class="mr-2"
-      color="#f7f9ef"
-      icon="mdi-archive-plus"
-      :to="{
-        name: 'archive-items/ArchiveItemNewPage',
-      }"
-    />
 
     <NotificationMenu />
 
@@ -85,16 +61,12 @@ const { mdAndUp } = useDisplay()
 
 const showDrawer = ref(mdAndUp.value)
 const showRail = ref(!mdAndUp.value)
-const searchWidth = ref(120)
-const searchValue = ref("")
 
 const { title } = useBreadcrumbs()
 
 watch(
   () => unref(mdAndUp),
   (newVal) => {
-    console.log("NM", newVal)
-    //!mobile || (mobile && showDrawer)
     if (!newVal) {
       showDrawer.value = true
       showRail.value = false
@@ -106,20 +78,9 @@ watch(
 )
 
 function toggleDrawer() {
-  console.log(mdAndUp.value)
-
   if (!mdAndUp.value) showDrawer.value = !showDrawer.value
   else {
     showRail.value = !showRail.value
-  }
-}
-
-function updateSearchFocus(hasFocus: boolean) {
-  if (hasFocus) {
-    searchWidth.value = 300
-  } else {
-    searchWidth.value = 120
-    searchValue.value = ""
   }
 }
 </script>

@@ -21,20 +21,6 @@
         <span class="text-h6">Home</span>
       </v-list-item>
 
-      <v-list-item
-        title="Knowledge Items"
-        :to="{ name: 'archive-items/ArchiveItemListPage' }"
-        :exact="false"
-        prepend-icon="mdi-archive"
-      />
-
-      <v-list-item
-        v-if="isAdmin"
-        title="Administration"
-        :to="{ name: 'administration/DashboardPage' }"
-        :exact="false"
-        prepend-icon="mdi-cog"
-      />
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -42,8 +28,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useDisplay } from "vuetify"
-
-import useCurrentUser from "@/use/use-current-user"
 
 const { mdAndUp } = useDisplay()
 
@@ -54,6 +38,4 @@ const showDrawer = defineModel<boolean>({
 })
 
 const open = ref([])
-
-const { isAdmin } = useCurrentUser<true>()
 </script>

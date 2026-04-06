@@ -49,20 +49,12 @@ watch(
 
     if (isAuth === true) {
       try {
-        console.log("Loading current user")
         await fetch()
         isReady.value = true
-
-        if (route.name == "SignInPage") {
-          //if (isSystemAdmin.value == true)
-          //router.push({ name: "administration/DashboardPage" })
-          //else router.push({ name: "individual/HomePage" })
-        }
       } catch (error) {
-        console.log("Failed to load current user:", error)
+        console.error("Failed to load current user:", error)
         isErrored.value = true
         await router.isReady()
-        //await router.push({ name: "UnauthorizedPage" })
         await router.push({ name: "SignInPage" })
       }
     } else if (!isUnauthenticatedRoute.value === false) {

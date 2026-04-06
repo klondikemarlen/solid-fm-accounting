@@ -5,8 +5,6 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
-import { type Group } from "@/api/groups-api"
-import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
 
 /** Keep in sync with api/src/models/user.ts */
 export enum UserRoles {
@@ -34,26 +32,7 @@ export type User = {
 
   // Virtuals
   isActive: boolean
-
-  // Associations
-  adminGroups?: Group[]
-  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
 }
-
-export type UserReferenceView = Pick<
-  User,
-  | "id"
-  | "email"
-  | "firstName"
-  | "lastName"
-  | "displayName"
-  | "title"
-  | "department"
-  | "division"
-  | "branch"
-  | "unit"
-  | "emailNotificationsEnabled"
->
 
 export type UserWhereOptions = WhereOptions<
   User,
@@ -62,10 +41,6 @@ export type UserWhereOptions = WhereOptions<
 
 export type UserFiltersOptions = FiltersOptions<{
   search: string | string[]
-  inGroup: number
-  notInGroup: number
-  withoutAccessGrantFor: number
-  // TODO: implement isActive scope in back-end
 }>
 
 export type UserQueryOptions = QueryOptions<UserWhereOptions, UserFiltersOptions>
