@@ -1,7 +1,14 @@
 {
   "eslint.workingDirectories": ["./api", "./web"],
   "eslint.validate": ["javascript", "typescript", "vue"],
-  "rubyLsp.bundleGemfile": "${workspaceFolder}/api/Gemfile",
-  "rubyLsp.rubyExecutablePath": "${workspaceFolder}/api/.ruby-version",
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true
+  },
+  "rubyLsp.bundleGemfile": "${workspaceFolder}/Gemfile",
+  "rubyLsp.formatter": "syntax_tree",
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "asdf"
+  },
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }
