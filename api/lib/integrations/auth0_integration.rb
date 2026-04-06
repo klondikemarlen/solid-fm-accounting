@@ -35,11 +35,10 @@
 #
 # export default { getUserInfo }
 
-require "httparty"
+require Rails.root.join("lib/symbolized_httparty")
 
 module Integrations
-  class Auth0Integration
-    include HTTParty
+  class Auth0Integration < ::SymbolizedHTTParty
     base_uri ENV.fetch("VITE_AUTH0_DOMAIN").chomp("/")
 
     # Auth0 UserInfo structure
@@ -53,7 +52,7 @@ module Integrations
     def self.get_user_info(authorization_token)
       response = get("/userinfo", headers: { "Authorization" => authorization_token })
 
-      sub, email = response.parsed_response.values_at("sub", "email")
+      response.parsed_response => { sub:, email: }
 
       # TODO: write a type for the auth0 response and assert that the payload conforms to it
       raise StandardError, "Payload from Auth0 is missing a subject." if sub.nil?
