@@ -51,7 +51,7 @@ A simple, end-to-end bookkeeping solution: record transactions, generate accurat
 
 7. To get the local per-service node_modules, so your code editor gets linting and types, do `cd api && bundle install` and `cd web && npm install`.
 
-### Code formatting (Prettier)
+### Code formatting
 
 1. Install the top-level Node dev dependencies (if you have not already):
 
@@ -59,25 +59,29 @@ A simple, end-to-end bookkeeping solution: record transactions, generate accurat
    npm install
    ```
 
-2. Install the top-level Ruby formatter dependencies from the committed `Gemfile`:
+2. Install the top-level Ruby development dependencies from the committed `Gemfile`:
 
    ```bash
    bundle install
    ```
 
-   This installs the pinned gems used by `@prettier/plugin-ruby`, including `syntax_tree`,
-   `syntax_tree-haml`, `syntax_tree-rbs`, and `prettier_print`.
+   This installs the pinned gems used by Ruby LSP and Syntax Tree formatting.
 
-3. Run Prettier over the Rails api code and SQL files from the top level of the repo:
+3. Ruby files should be formatted in-editor with the Shopify Ruby LSP using `syntax_tree`.
+
+   The workspace settings in `.vscode/settings.json` are configured to use Ruby LSP as the
+   default formatter for Ruby files.
+
+4. Use Prettier for standalone SQL files from the top level of the repo:
 
    ```bash
-   npx prettier --write "api/**/*.{rb,rake,sql}"
+   npx prettier --write "api/**/*.sql"
    ```
 
-   To only check formatting (for CI or pre-commit hooks):
+   To only check SQL formatting:
 
    ```bash
-   npx prettier --check "api/**/*.{rb,rake,sql}"
+   npx prettier --check "api/**/*.sql"
    ```
 
 ### API Service (a.k.a back-end)
