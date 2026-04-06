@@ -11,5 +11,6 @@ printWidth: 100
 plugins:
   - prettier-plugin-embed
   - prettier-plugin-sql
-language: "tsql"
+  - "@prettier/plugin-ruby"
+language: "postgresql"
 paramTypes: "{ named: [':'] }"
