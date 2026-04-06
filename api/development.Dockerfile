@@ -1,30 +1,28 @@
-FROM ruby:3.4.7
+FROM ruby:3.4.9
 
-RUN gem update --system 3.7.2 && gem install bundler -v 2.7.2
+# Accept UID/GID as build args to match host user
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 
-# TODO: add this once it is needed?
-# Install build dependencies for gems with native extensions
-# RUN apt-get update -qq && \
-#     apt-get install --no-install-recommends -y \
-#     build-essential \
-#     git \
-#     libpq-dev \
-#     libyaml-dev \
-#     pkg-config \
-#     postgresql-client && \
-#     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN gem update --system 4.0.9 && gem install bundler -v 4.0.8
 
 WORKDIR /usr/src/api
 
+# Install gems as root (per article recommendation)
 COPY Gemfile Gemfile.lock ./
-
 RUN bundle install
 
-# Make bundle directory writable for all users (needed when running as non-root)
-RUN chmod -R a+w /usr/local/bundle
+# Create app user with matching UID/GID and home directory
+RUN groupadd --gid ${GROUP_ID} appuser && \
+    useradd --uid ${USER_ID} --gid ${GROUP_ID} --create-home --shell /bin/bash appuser
+
+# Give ownership of app and bundle directories to appuser
+RUN chown -R appuser:appuser /usr/src/api /usr/local/bundle
 
 COPY . .
-
 RUN chmod +x ./bin/rails
+
+# Switch to non-root user
+USER appuser
 
 CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

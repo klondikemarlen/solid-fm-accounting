@@ -33,13 +33,15 @@ services:
     build:
       context: ./api
       dockerfile: development.Dockerfile
+      args:
+        USER_ID: ${HOST_USER_ID:-1000}
+        GROUP_ID: ${HOST_GROUP_ID:-1000}
     # env_file:
     #   - ./api/.env.development
     environment:
       <<: *default-environment
     tty: true # allows attaching debugger, equivalent of docker exec -t
     # stdin_open: true # equivalent of docker exec -i
-    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "3000:3000"
     depends_on:
