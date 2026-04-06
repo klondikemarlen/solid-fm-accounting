@@ -1,24 +1,31 @@
-# README
+# API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This directory contains the Rails API for Solid FM Accounting.
 
-Things you may want to cover:
+## Development
 
-* Ruby version
+The normal way to run the API in development is from the repo root through `./bin/dev`.
 
-* System dependencies
+```bash
+./bin/dev up api
+```
 
-* Configuration
+Useful commands:
 
-* Database creation
+- Start an API shell: `./bin/dev exec api bash`
+- Run Rails commands: `./bin/dev rails <command>`
+- Run API tests: `./bin/dev test api`
 
-* Database initialization
+## Database
 
-* How to run the test suite
+This app uses Rails migrations and Rails seeds.
 
-* Services (job queues, cache servers, search engines, etc.)
+- Create and apply migrations: `./bin/dev rails db:migrate`
+- Roll back the latest migration: `./bin/dev rails db:rollback`
+- Run seeds: `./bin/dev rails db:seed`
 
-* Deployment instructions
+## Notes
 
-* ...
+- Local development uses the Docker Compose setup in the repo root.
+- The API service is intended to be accessed together with the web app running at
+  `http://localhost:8080`.

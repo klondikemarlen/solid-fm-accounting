@@ -31,25 +31,44 @@ A simple, end-to-end bookkeeping solution: record transactions, generate accurat
 
 ## Development
 
-1. In the `api` folder.
+1. [Set up the `dev`](#set-up-dev-command) command, or use `docker compose -f docker-compose.development.yml` directly.
 
-2. Create a `.env.development` file with the following content:
+2. Start the full development stack:
 
    ```bash
-   TODO
+   ./bin/dev up
    ```
 
-   See `docker-compose.development.yml` -> `x-default-environment` for optional values that you can customize as needed.
+   This starts the API, web app, database, and MailDev using Docker Compose.
 
-3. [Set up the `dev`](#set-up-dev-command) command, or use `docker compose -f docker-compose.development.yml` instead of `dev` in all instructions.
+3. Stop the stack with:
 
-4. Boot the api, web, and db services via `dev up --watch` or `dev watch` or `docker compose -f docker-compose.development.yml up --watch`. This will run the boot pipeline and create the database, run migrations, and run seeds.
+   ```bash
+   ./bin/dev down
+   ```
 
-5. Stop the api, web, and db services via `ctrl+c` or `dev down` or if you want to wipe the database `dev down -v`.
+4. If you need to wipe a service volume, pass the extra Docker Compose arguments through `./bin/dev`.
 
-6. Install local dependencies by installing `asdf` and node via `asdf` and then running `npm install` at the top level of the project.
+   For example, this removes the API bundle volume without wiping the database volume:
 
-7. To get the local per-service node_modules, so your code editor gets linting and types, do `cd api && bundle install` and `cd web && npm install`.
+   ```bash
+   ./bin/dev down api -v
+   ```
+
+5. The default local environment values live in `docker-compose.development.yml` under
+   `x-default-environment`.
+
+   Create an `api/.env.development` file only if you want to introduce local overrides that are not
+   already covered by the Compose defaults.
+
+6. Host-side editor tooling uses the top-level package and Gem bundles:
+
+   ```bash
+   npm install
+   bundle install
+   ```
+
+   These installs support tools such as SQL Prettier formatting and Ruby LSP formatting.
 
 ### Code formatting
 
@@ -89,58 +108,45 @@ A simple, end-to-end bookkeeping solution: record transactions, generate accurat
 1. Boot only the api service using:
 
    ```bash
-   dev up api
+   ./bin/dev up api
 
    # or
 
    docker compose -f docker-compose.development.yml up --watch api
-
-   # or
-
-   cd api
-   npm run start
    ```
 
-2. Access the api by logging in to the front-end, then going to http://localhost:3000
+2. Open the API at http://localhost:3000
 
 ### Web Service (a.k.a. front-end)
 
 1. Boot only the web service using:
 
    ```bash
-   dev up web
+   ./bin/dev up web
 
    # or
 
    docker compose -f docker-compose.development.yml up --watch web
-
-   # or
-
-   cd web
-   npm run start
    ```
 
-2. Log in to the front-end service at http://localhost:8080
+2. Open the front-end at http://localhost:8080
 
 ### DB Service (a.k.a database service)
 
 1. Boot only the db service using:
 
    ```bash
-   dev up db
+   ./bin/dev up db
 
    # or
 
    docker compose -f docker-compose.development.yml up --watch db
    ```
 
-   > Migrations run automatically, as do seeds.
-   > NOTE: production and development have different seeds.
-
 2. You can access the `psql` command line via
 
    ```bash
-   dev psql
+   ./bin/dev psql
 
    # or
 
@@ -165,7 +171,7 @@ by default.
 
 ## Testing
 
-1. Run the api test suite via `dev test_api`.
+1. Run the api test suite via `./bin/dev test api`.
 
 See [api/tests/README.md](./api/tests/README.md) for more detailed info.
 
@@ -176,7 +182,7 @@ This project now uses Rails Active Record migrations. Naming conventions should 
 1. To generate a new migration run:
 
    ```bash
-   dev rails generate migration CreateUsersTable
+   ./bin/dev rails generate migration CreateUsersTable
    ```
 
    Replace `CreateUsersTable` with a descriptive migration class name. Generated files will appear under `api/db/migrate/`.
@@ -186,19 +192,19 @@ This project now uses Rails Active Record migrations. Naming conventions should 
 2. To apply all pending migrations run:
 
    ```bash
-   dev rails db:migrate
+   ./bin/dev rails db:migrate
    ```
 
 3. To rollback the most recent migration run:
 
    ```bash
-   dev rails db:rollback
+   ./bin/dev rails db:rollback
    ```
 
 4. To rollback all migrations and reapply them run:
 
    ```bash
-   dev rails db:migrate:reset
+   ./bin/dev rails db:migrate:reset
    ```
 
 ### Seeding
@@ -208,19 +214,19 @@ Seeding relies on Rails `db/seeds` files located under `api/db/`. Place shared d
 1. To execute the default seed script run:
 
    ```bash
-   dev rails db:seed
+   ./bin/dev rails db:seed
    ```
 
 2. To truncate tables and reseed from scratch run:
 
    ```bash
-   dev rails db:seed:replant
+   ./bin/dev rails db:seed:replant
    ```
 
 3. To run seeds for a specific environment set `RAILS_ENV` explicitly:
 
    ```bash
-   RAILS_ENV=production dev rails db:seed
+   RAILS_ENV=production ./bin/dev rails db:seed
    ```
 
 Seeds remain environment-scoped, enabling minimal defaults in production and richer fixtures in development. Rails seeds do not track execution history, so keep every seed operation idempotent to ensure it is safe to rerun at any time.
@@ -231,7 +237,8 @@ Seeds remain environment-scoped, enabling minimal defaults in production and ric
 
 ### Extras
 
-If you want to take over a directory or file in Linux you can use `dev ownit <path-to-directory-or-file>`.
+If you want to take over a directory or file in Linux you can use
+`./bin/dev ownit <path-to-directory-or-file>`.
 
 If you are on Windows or Mac, and you want that to work, you should implement it in the `bin/dev` file. You might never actually need to take ownership of anything, so this might not be relevant to you.
 
@@ -286,11 +293,12 @@ All commands are just strings joined together, so it's easy to add new commmands
 
    You will now be able to do `dev xxx` instead ov `./bin/dev xxx`.
 
-# Deploying
+## Deploying
 
 ## Production Environment (remote)
 
-TODO
+Production deployment documentation is not finalized yet. See the deployment-related files under
+`api/config/` for the current app deployment scaffolding.
 
 ## Test Production Build Locally
 
@@ -298,13 +306,11 @@ Files:
 
 - [Dockerfile](./Dockerfile)
 - [docker-compose.yml](./docker-compose.yml)
-- Non-commited `.env` file
+- Non-committed `.env` file
 
 1. Create a `.env` file in top level directory with the appropriate values.
 
-   ```bash
-   TODO
-   ```
+   The exact values depend on the target environment and are not fully documented yet.
 
 2. (optional) If testing build arguments do
 
