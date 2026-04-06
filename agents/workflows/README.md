@@ -15,6 +15,7 @@ implementation details, constraints, or required steps.
 | Workflow | Description |
 | --- | --- |
 | [code-review.md](./code-review.md) | Review Rails, Vue, and TypeScript changes for bugs, regressions, and missing verification |
+| [create-pipeline-view.md](./create-pipeline-view.md) | Create a documentation-only projection view of a real end-to-end workflow or system path |
 | [github-issue-creation.md](./github-issue-creation.md) | Create well-structured GitHub issues using the local issue templates |
 | [pull-request-management.md](./pull-request-management.md) | Create and update pull requests following this repo's PR template and conventions |
 | [testing-instructions.md](./testing-instructions.md) | Generate reviewer-friendly testing steps with exact UI labels and navigation |
@@ -47,4 +48,11 @@ Example:
 ```text
 Follow the workflow in agents/workflows/github-issue-creation.md
 to create a GitHub issue for this bug.
+```
+
+Example:
+
+```text
+Follow the workflow in agents/workflows/create-pipeline-view.md
+to document the invoice import flow as a projection view.
 ```

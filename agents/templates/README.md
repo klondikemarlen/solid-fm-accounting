@@ -14,9 +14,19 @@ template files directly before generating code or documentation.
 Templates provide reusable starting points that multiple workflows can reference. They are not
 standalone workflows but building blocks.
 
-## Current State
+## Available Templates
 
-This repo does not yet have any committed reusable templates under `agents/templates/`.
+| Template | Description |
+| --- | --- |
+| [pipeline-view.md](./pipeline-view.md) | Create a documentation-only projection view for a multi-file workflow or system path |
 
-When a repeated local pattern becomes clear, add a dedicated template file here and update this
-README.
+## Usage
+
+Templates are useful when a task follows a repeated local pattern and benefits from a proven shape.
+
+Example:
+
+```text
+Follow the template in agents/templates/pipeline-view.md
+to document the user login flow as a projection view.
+```
