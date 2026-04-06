@@ -51,6 +51,35 @@ A simple, end-to-end bookkeeping solution: record transactions, generate accurat
 
 7. To get the local per-service node_modules, so your code editor gets linting and types, do `cd api && bundle install` and `cd web && npm install`.
 
+### Code formatting (Prettier)
+
+1. Install the top-level Node dev dependencies (if you have not already):
+
+   ```bash
+   npm install
+   ```
+
+2. Install the top-level Ruby formatter dependencies from the committed `Gemfile`:
+
+   ```bash
+   bundle install
+   ```
+
+   This installs the pinned gems used by `@prettier/plugin-ruby`, including `syntax_tree`,
+   `syntax_tree-haml`, `syntax_tree-rbs`, and `prettier_print`.
+
+3. Run Prettier over the Rails api code and SQL files from the top level of the repo:
+
+   ```bash
+   npx prettier --write "api/**/*.{rb,rake,sql}"
+   ```
+
+   To only check formatting (for CI or pre-commit hooks):
+
+   ```bash
+   npx prettier --check "api/**/*.{rb,rake,sql}"
+   ```
+
 ### API Service (a.k.a back-end)
 
 1. Boot only the api service using:
