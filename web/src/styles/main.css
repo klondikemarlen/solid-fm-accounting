@@ -1,0 +1,3 @@
+@layer theme, base, vuetify, components, utilities;
+
+@import "vuetify/styles" layer(vuetify);
