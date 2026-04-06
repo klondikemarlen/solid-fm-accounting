@@ -60,6 +60,7 @@ class DevHelper
   end
 
   def up(*args, **kwargs)
+    remove_api_server_pid_if_starting_api!(*args)
     compose(*%w[up --remove-orphans --watch], *args, **kwargs)
   end
 
@@ -254,6 +255,17 @@ class DevHelper
     else
       raise NotImplementedError, "Not implement for platform #{RUBY_PLATFORM}"
     end
+  end
+
+  private
+
+  def remove_api_server_pid_if_starting_api!(*args)
+    return unless args.empty? || args.include?("api")
+
+    server_pid_path = File.expand_path("../api/tmp/pids/server.pid", __dir__)
+    return unless File.exist?(server_pid_path)
+
+    File.delete(server_pid_path)
   end
 
   ##
