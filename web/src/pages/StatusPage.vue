@@ -1,6 +1,19 @@
 <template>
   <v-app>
     <v-container>
+      <div class="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm shadow-sm">
+        <span class="font-semibold text-slate-900">UnoCSS presetWind4 + Vuetify check</span>
+        <v-chip
+          color="primary"
+          size="small"
+        >
+          Vuetify chip
+        </v-chip>
+        <span class="text-slate-600">
+          Utilities handle layout and spacing while Vuetify still owns component styling.
+        </span>
+      </div>
+
       Return to <router-link :to="{ name: returnTo.name }">{{ returnTo.title }}</router-link>
 
       <v-row class="mt-5">

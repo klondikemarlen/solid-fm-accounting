@@ -4,9 +4,9 @@
  * Framework documentation: https://vuetifyjs.com`
  */
 
-// Styles - Note that order matters here!
-import "modern-normalize/modern-normalize.css"
+import "@/styles/layers.css"
 import "vuetify/styles"
+import "uno.css"
 
 import { createVuetify } from "vuetify"
 

@@ -23,6 +23,8 @@ This reduces review friction and creates useful documentation.
 - **Use the local PR template:** Follow [`.github/pull_request_template.md`](../../.github/pull_request_template.md)
 - **Issue linkage wording:** Use `Fixes <issue-url>` only when the PR should close the linked issue.
   Use `Part of <issue-url>` when the PR is one slice of larger work
+- **Do not pre-close issues:** If the PR uses `Fixes <issue-url>`, leave the issue open and let the
+  merge close it automatically instead of manually closing it during implementation
 - **Context section:** Explain why the change is needed, not just what changed
 - **Implementation section:** Focus on purpose and intent, not file-by-file summaries
 - **Screenshots:** If frontend files changed, write `TODO` and let a human add screenshots later.
