@@ -60,8 +60,12 @@ class DevHelper
   end
 
   def up(*args, **kwargs)
+    should_watch = args.empty? || args.any? { |service| %w[api web].include?(service) }
+    compose_arguments = %w[up --remove-orphans]
+    compose_arguments << "--watch" if should_watch
+
     remove_api_server_pid_if_starting_api!(*args)
-    compose(*%w[up --remove-orphans --watch], *args, **kwargs)
+    compose(*compose_arguments, *args, **kwargs)
   end
 
   def down(*args, **kwargs)
