@@ -18,4 +18,6 @@
 #  index_users_on_email_unique          (email) UNIQUE WHERE (deleted_at IS NULL)
 #
 class User < ApplicationRecord
+  has_many :accounts, dependent: :restrict_with_exception
+  has_many :transactions, dependent: :restrict_with_exception
 end
