@@ -84,33 +84,23 @@ services:
           path: ./web/package-lock.json
           target: /usr/src/web/package-lock.json
 
-  # test_api:
-  #   build:
-  #     context: ./api
-  #     dockerfile: development.Dockerfile
-  #   command: /bin/true
-  #   env_file:
-  #     - ./api/.env.development
-  #   environment:
-  #     <<: *default-environment
-  #     NODE_ENV: test
-  #     DB_DATABASE: solid_fm_accouting_test
-  #     DEFAULT_LOG_LEVEL: "info"
-  #     DB_HEALTH_CHECK_START_PERIOD_SECONDS: 0
-  #   tty: true
-  #   volumes:
-  #     - ./api:/usr/src/api
-  #   depends_on:
-  #     - db
-  #     - mail
-  #   develop:
-  #     watch:
-  #       - *gitignore-sync
-  #       - *prettierrc-sync
-  #       - *docker-compose-rebuild
-  #       - path: ./api/package-lock.json
-  #         action: rebuild
-
+  test_api:
+    build:
+      context: ./api
+      dockerfile: development.Dockerfile
+    command: /bin/true
+    environment:
+      <<: *default-environment
+      RAILS_ENV: test
+      TEST_DB_DATABASE: solid_fm_accounting_test
+    tty: true
+    volumes:
+      - ./api:/usr/src/api
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+      - api-bundle:/usr/local/bundle
+    depends_on:
+      - db
   # test_web:
   #   build:
   #     context: ./web
