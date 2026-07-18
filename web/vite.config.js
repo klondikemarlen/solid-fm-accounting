@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from "node:url"
 // Plugins
 import vue from "@vitejs/plugin-vue"
 import vuetify from "vite-plugin-vuetify"
+import UnoCSS from "unocss/vite"
 
 // Utilities
 import { defineConfig } from "vite"
@@ -11,6 +12,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
   plugins: [
     vue(),
+    UnoCSS(),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({
       autoImport: {

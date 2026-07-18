@@ -9,7 +9,6 @@
 
       <v-breadcrumbs
         :items="breadcrumbsWithExactTrueByDefault"
-        large
         class="pa-0 mb-0"
       >
         <template #divider>

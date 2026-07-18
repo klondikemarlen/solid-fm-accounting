@@ -78,6 +78,8 @@ creation or issue cleanup, agents should also use the GitHub issue workflow.
 
 - Use descriptive, emoji-prefixed commit messages
 - Keep one commit per logical change
+- When a branch already has or will have a PR with `Fixes <issue-url>`, do not manually close the
+  issue during implementation; let the PR close it on merge
 - For PR descriptions, use the structure in [`.github/pull_request_template.md`](./.github/pull_request_template.md)
 - When a PR changes user-visible behavior, always include precise testing steps with exact UI labels
 
