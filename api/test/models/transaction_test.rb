@@ -84,11 +84,21 @@ class TransactionTest < ActiveSupport::TestCase
     )
 
     transaction.receipts.attach(
-      io: StringIO.new("receipt"),
-      filename: "receipt.pdf",
-      content_type: "application/pdf"
+      [
+        {
+          io: StringIO.new("first receipt"),
+          filename: "receipt.pdf",
+          content_type: "application/pdf"
+        },
+        {
+          io: StringIO.new("second receipt"),
+          filename: "receipt.jpg",
+          content_type: "image/jpeg"
+        }
+      ]
     )
 
+    assert_equal 2, transaction.receipts.count
     assert_predicate transaction.receipts, :attached?
   end
 
