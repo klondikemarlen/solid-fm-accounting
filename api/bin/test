@@ -2,5 +2,5 @@
 
 set -eu
 
-bundle exec rails db:prepare
+bundle exec rails db:migrate
 exec bundle exec rails test "$@"
