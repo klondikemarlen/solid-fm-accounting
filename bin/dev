@@ -136,8 +136,7 @@ class DevHelper
   end
 
   def test_api(*args, **kwargs)
-    reformat_project_relative_path_filter_for_vitest!(args, "api/")
-    run(*%w[test_api npm run test], *args, **kwargs)
+    run(*%w[test_api ./bin/test], *args, **kwargs)
   end
 
   def test_web(*args, **kwargs)

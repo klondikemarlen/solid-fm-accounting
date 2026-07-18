@@ -16,6 +16,9 @@ Useful commands:
 - Run Rails commands: `./bin/dev rails <command>`
 - Run API tests: `./bin/dev test api`
 
+The wrapper runs the `test_api` service with `RAILS_ENV=test` and its own
+`solid_fm_accounting_test` database, so focused API tests do not touch development data.
+
 ## Database
 
 This app uses Rails migrations and Rails seeds.
