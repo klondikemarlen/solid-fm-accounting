@@ -19,7 +19,7 @@
       <v-row class="mt-5">
         <v-col cols="12">
           <v-card
-            outlined
+            variant="outlined"
             class="pa-3"
             :loading="isLoading"
           >
@@ -36,7 +36,7 @@
                 <v-icon>mdi-cached</v-icon>
               </v-btn>
             </v-card-title>
-            <v-list dense>
+            <v-list density="compact">
               <v-list-item> Release Tag: {{ environment.releaseTag }} </v-list-item>
               <v-list-item> Git Commit Hash: {{ environment.gitCommitHash }} </v-list-item>
             </v-list>
