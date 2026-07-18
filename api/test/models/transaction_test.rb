@@ -71,6 +71,27 @@ class TransactionTest < ActiveSupport::TestCase
     assert_includes transaction.errors[:category], "must support the transaction type"
   end
 
+  test "rejects receipts other than images and PDFs" do
+    user = create_user
+    transaction = Transaction.new(
+      user:,
+      category: create_category,
+      payment_method: PaymentMethod.create!(name: "Credit Card"),
+      account: create_account(user),
+      transaction_type: "expense",
+      transaction_date: Date.current,
+      amount: 12.34
+    )
+    transaction.receipts.attach(
+      io: StringIO.new("not a receipt"),
+      filename: "receipt.txt",
+      content_type: "text/plain"
+    )
+
+    assert_not transaction.valid?
+    assert_includes transaction.errors[:receipts], "must be images or PDFs"
+  end
+
   test "attaches multiple receipts" do
     user = create_user
     transaction = Transaction.create!(

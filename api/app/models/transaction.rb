@@ -16,6 +16,7 @@ class Transaction < ApplicationRecord
   validates :amount, numericality: { greater_than: 0 }
   validate :account_belongs_to_user
   validate :category_supports_transaction_type
+  validate :receipts_are_images_or_pdfs
 
   private
 
@@ -23,6 +24,12 @@ class Transaction < ApplicationRecord
     return if account.blank? || user.blank? || account.user_id == user.id
 
     errors.add(:account, "must belong to the transaction user")
+  end
+
+  def receipts_are_images_or_pdfs
+    return if receipts.all? { |receipt| receipt.content_type == "application/pdf" || receipt.content_type&.start_with?("image/") }
+
+    errors.add(:receipts, "must be images or PDFs")
   end
 
   def category_supports_transaction_type
