@@ -34,6 +34,12 @@ export default defineConfig({
     port: 8080,
   },
   test: {
-    globals: true, // https://vitest.dev/config/#globals
+    environment: "jsdom",
+    globals: true,
+    server: {
+      deps: {
+        inline: ["vuetify"],
+      },
+    },
   },
 })
