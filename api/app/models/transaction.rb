@@ -4,6 +4,8 @@ class Transaction < ApplicationRecord
     expense: "expense"
   }.freeze
 
+  MAX_RECEIPT_SIZE = 10.megabytes
+
   belongs_to :user
   belongs_to :category, -> { with_deleted }
   belongs_to :payment_method, -> { with_deleted }
@@ -17,6 +19,7 @@ class Transaction < ApplicationRecord
   validate :account_belongs_to_user
   validate :category_supports_transaction_type
   validate :receipts_are_images_or_pdfs
+  validate :receipts_are_within_size_limit
 
   private
 
@@ -30,6 +33,12 @@ class Transaction < ApplicationRecord
     return if receipts.all? { |receipt| receipt.content_type == "application/pdf" || receipt.content_type&.start_with?("image/") }
 
     errors.add(:receipts, "must be images or PDFs")
+  end
+
+  def receipts_are_within_size_limit
+    return if receipts.all? { |receipt| receipt.byte_size <= MAX_RECEIPT_SIZE }
+
+    errors.add(:receipts, "must be 10 MB or smaller")
   end
 
   def category_supports_transaction_type
