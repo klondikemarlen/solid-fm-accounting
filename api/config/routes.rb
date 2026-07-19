@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     get "current-user", to: "current_user#show"
     resources :accounts, only: [ :index, :create, :update, :destroy ]
+    resources :categories, only: :index
+    resources :payment_methods, only: :index, path: "payment-methods"
+    resources :transactions, only: [ :index, :show, :create, :update, :destroy ]
   end
 
   # Defines the root path route ("/")

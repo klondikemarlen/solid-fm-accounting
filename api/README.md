@@ -50,3 +50,7 @@ This app uses Rails migrations and Rails seeds.
   the invariant. Make seed data idempotent.
 - Test externally observable API behavior: authorization boundaries, validation failures, success
   responses, and persistence. Run focused API tests through `./bin/dev test api`.
+
+## Transaction Receipts
+
+`POST`, `PATCH`, and `PUT /api/transactions` accept image or PDF receipts up to 10 MB each.

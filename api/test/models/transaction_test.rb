@@ -1,4 +1,5 @@
 require "stringio"
+require "tempfile"
 
 require "test_helper"
 
@@ -90,6 +91,33 @@ class TransactionTest < ActiveSupport::TestCase
 
     assert_not transaction.valid?
     assert_includes transaction.errors[:receipts], "must be images or PDFs"
+  end
+
+  test "rejects receipts larger than 10 MB" do
+    file = nil
+    user = create_user
+    transaction = Transaction.new(
+      user:,
+      category: create_category,
+      payment_method: PaymentMethod.create!(name: "Credit Card"),
+      account: create_account(user),
+      transaction_type: "expense",
+      transaction_date: Date.current,
+      amount: 12.34
+    )
+    file = Tempfile.new("receipt")
+    file.truncate(Transaction::MAX_RECEIPT_SIZE + 1)
+    file.rewind
+    transaction.receipts.attach(
+      io: file,
+      filename: "receipt.pdf",
+      content_type: "application/pdf"
+    )
+
+    assert_not transaction.valid?
+    assert_includes transaction.errors[:receipts], "must be 10 MB or smaller"
+  ensure
+    file&.close!
   end
 
   test "attaches multiple receipts" do
