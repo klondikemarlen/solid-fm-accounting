@@ -32,6 +32,16 @@ class Api::TransactionsControllerTest < ActionController::TestCase
     assert_equal "application/pdf", response.parsed_body.first.dig("receipts", 0, "contentType")
   end
 
+  test "shows a current user's transaction" do
+    transaction = create_transaction(@user)
+
+    with_current_user(@user) { get :show, params: { id: transaction.id }, as: :json }
+
+    assert_response :success
+    assert_equal transaction.id, response.parsed_body.fetch("id")
+    assert_equal "expense", response.parsed_body.fetch("transactionType")
+  end
+
   test "creates a transaction with multiple receipts" do
     with_current_user(@user) do
       post :create,
