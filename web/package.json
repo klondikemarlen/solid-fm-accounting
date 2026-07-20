@@ -7,7 +7,7 @@
     "start": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run",
     "lint": "eslint . --ext .js,.ts,.vue --ignore-path .gitignore",
     "check-types": "vue-tsc --noEmit"
   },

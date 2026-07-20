@@ -100,17 +100,20 @@ services:
       - api-bundle:/usr/local/bundle
     depends_on:
       - db
-  # test_web:
-  #   build:
-  #     context: ./web
-  #     dockerfile: development.Dockerfile
-  #   command: /bin/true
-  #   environment:
-  #     <<: *default-environment
-  #     NODE_ENV: test
-  #   tty: true
-  #   volumes:
-  #     - ./web:/usr/src/web
+  test_web:
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
+    command: /bin/true
+    environment:
+      <<: *default-environment
+      NODE_ENV: test
+    tty: true
+    volumes:
+      - ./web:/usr/src/web
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+      - web-node_modules:/usr/src/web/node_modules
 
   db:
     image: postgres:18.0
