@@ -20,6 +20,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "transactions",
+        name: "TransactionsPage",
+        component: () => import("@/pages/TransactionsPage.vue"),
+        meta: {
+          title: "Transactions",
+        },
+      },
+      {
         path: "profile",
         name: "ProfilePage",
         component: () => import("@/pages/ProfilePage.vue"),

@@ -21,6 +21,15 @@
         <span class="text-h6">Home</span>
       </v-list-item>
 
+      <v-list-item
+        prepend-icon="mdi-receipt-text"
+        style="height: 64px; opacity: 1"
+        color="black"
+        :to="{ name: 'TransactionsPage' }"
+      >
+        <span class="text-h6">Transactions</span>
+      </v-list-item>
+
     </v-list>
   </v-navigation-drawer>
 </template>
